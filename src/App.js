@@ -26,7 +26,7 @@ function App() {
         setError(null);
 
         try {
-            const response = await axios.post('http://anizalmuseycai/backend:5001/generate', {
+            const response = await axios.post('http://backend:5001/generate', {
                 image: image,
                 prompt: prompt
             });

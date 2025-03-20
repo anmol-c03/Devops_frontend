@@ -26,7 +26,7 @@ function App() {
         setError(null);
 
         try {
-            const response = await axios.post('http://20.172.37.185:5051/generate', {
+            const response = await axios.post('http://20.172.37.185:5001/generate', {
                 image: image,
                 prompt: prompt
             });

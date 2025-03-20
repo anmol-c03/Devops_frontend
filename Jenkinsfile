@@ -65,10 +65,16 @@ pipeline {
         stage('run docker image') {
             steps {
                 sh """
+                    # Ensure network exists
                     ssh azureuser@20.172.37.185 "docker network inspect my-network >/dev/null 2>&1 || docker network create my-network"
-                    ssh azureuser@20.172.37.185 "docker run -d -p 80:80 --network my-network anizalmuseycai/frontend:${BUILD_NUMBER}"
+                    
+                    # Check for and stop any existing frontend container
+                    ssh azureuser@20.172.37.185 "docker ps -q --filter name=frontend | grep -q . && docker stop frontend && docker rm frontend || echo 'No previous container found'"
+                    
+                    # Run the new container with a specific name
+                    ssh azureuser@20.172.37.185 "docker run -d -p 80:80 --name frontend --network my-network anizalmuseycai/frontend:${BUILD_NUMBER}"
                 """
-            }
+                }
         }
     }
     post {

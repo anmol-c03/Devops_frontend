@@ -8,7 +8,7 @@ function App() {
     const [error, setError] = useState(null);
     const dropArea = useRef(null);
     const [outputText, setOutputText] = useState('');
-    // const [prompt, setPrompt] = useState('');
+    const [prompt, setPrompt] = useState('');
 
     const handleImageChange = (e) => {
         const file = e.target.files[0];
@@ -28,7 +28,7 @@ function App() {
         try {
             const response = await axios.post('http://anizalmuseycai/backend:5001/generate', {
                 image: image,
-                // prompt: prompt
+                prompt: prompt
             });
             setOutputText(response.data.gemini_response);
         } catch (err) {
@@ -67,9 +67,9 @@ function App() {
         setImage(null);
     };
 
-    // const handlePromptChange = (e) => {
-    //     setPrompt(e.target.value);
-    // };
+    const handlePromptChange = (e) => {
+        setPrompt(e.target.value);
+    };
 
     const handleOutputTextChange = (e) => {
         setOutputText(e.target.value);
@@ -123,7 +123,7 @@ function App() {
                         </label>
                     </div>
                     
-                    {/* <div className="prompt-container">
+                    <div className="prompt-container">
                         <textarea
                             placeholder="Enter your prompt here..."
                             value={prompt}
@@ -131,7 +131,7 @@ function App() {
                             className="prompt-input"
                         />
                     </div>
-                     */}
+                    
                     <div className="button-container">
                         <button 
                             className="generate-button"

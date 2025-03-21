@@ -62,23 +62,24 @@ pipeline {
             }
         }
         
-        // stage('Update Playbook') {
-        //     steps {
-        //         sh """
-        //             # Find the actual path to the jenkins home directory
-        //             JENKINS_HOME=\$(eval echo ~jenkins)
+        stage('Update Playbook') {
+            steps {
+                sh """
+                    # Find the actual path to the jenkins home directory
+                    JENKINS_HOME=\$(eval echo ~jenkins)
                     
-        //             # Update the image version in the deployment playbook
-        //             sed -i 's|image: anizalmuseycai/frontend.*|image: anizalmuseycai/frontend:${BUILD_NUMBER}|g' \$JENKINS_HOME/playbooks/deployment.yml
-        //             sed -i 's|name: anizalmuseycai/frontend.*|name: anizalmuseycai/frontend:${BUILD_NUMBER}|g' \$JENKINS_HOME/playbooks/deployment.yml
-        //         """
-        //     }
-        // }
+                    # Update the image version in the deployment playbook
+                    sed -i 's|image: anizalmuseycai/frontend.*|image: anizalmuseycai/frontend:${BUILD_NUMBER}|g' \$JENKINS_HOME/playbooks/deployment.yml
+                    sed -i 's|name: anizalmuseycai/frontend.*|name: anizalmuseycai/frontend:${BUILD_NUMBER}|g' \$JENKINS_HOME/playbooks/deployment.yml
+                """
+            }
+        }
         
         stage('Deploy with Ansible') {
             steps {
                 sh """
                     cd /var/lib/jenkins/playbooks
+                    // export BUILD_NUMBER=${BUILD_NUMBER}
                     ansible-playbook -i inventory.ini deployment.yml
                 """
             }

@@ -79,7 +79,6 @@ pipeline {
             steps {
                 sh """
                     cd /var/lib/jenkins/playbooks
-                    // export BUILD_NUMBER=${BUILD_NUMBER}
                     ansible-playbook -i inventory.ini deployment.yml
                 """
             }

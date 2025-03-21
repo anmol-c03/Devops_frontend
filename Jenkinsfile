@@ -78,7 +78,7 @@ pipeline {
         stage('Deploy with Ansible') {
             steps {
                 sh """
-                    cd /var/lib/jenkins/playbook
+                    cd /var/lib/jenkins/playbooks
                     ansible-playbook -i inventory.ini deployment.yml
                 """
             }

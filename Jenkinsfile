@@ -62,19 +62,23 @@ pipeline {
             }
         }
         
-        stage('run docker image') {
+        stage('Update Playbook') {
             steps {
                 sh """
-                    # Ensure network exists
-                    ssh azureuser@20.172.37.185 "docker network inspect my-network >/dev/null 2>&1 || docker network create my-network"
-                    
-                    # Check for and stop any existing frontend container
-                    ssh azureuser@20.172.37.185 "docker ps -q --filter name=frontend | grep -q . && docker stop frontend && docker rm frontend || echo 'No previous container found'"
-                    
-                    # Run the new container with a specific name
-                    ssh azureuser@20.172.37.185 "docker run -d -p 80:80 --name frontend --network my-network anizalmuseycai/frontend:${BUILD_NUMBER}"
+                    # Update the image version in the deployment playbook
+                    sed -i 's|image: anizalmuseycai/frontend.*|image: anizalmuseycai/frontend:${BUILD_NUMBER}|g' /var/lib/jenkins/playbook/deployment.yml
+                    sed -i 's|name: anizalmuseycai/frontend.*|name: anizalmuseycai/frontend:${BUILD_NUMBER}|g' /var/lib/jenkins/playbook/deployment.yml
                 """
-                }
+            }
+        }
+        
+        stage('Deploy with Ansible') {
+            steps {
+                sh """
+                    cd /var/lib/jenkins/playbook
+                    ansible-playbook -i inventory.ini deployment.yml
+                """
+            }
         }
     }
     post {
